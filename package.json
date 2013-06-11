@@ -18,6 +18,10 @@
         "url": "git://github.com/dbushell/grunt-svg2png.git"
     },
 
+    "bugs": {
+        "url": "https://github.com/dbushell/grunt-svg2png/issues"
+    },
+
     "main": "Gruntfile.js",
 
     "engines": {

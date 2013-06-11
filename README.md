@@ -1,9 +1,11 @@
 grunt-svg2png
 =============
 
-Grunt plugin to rasterize SVG to PNG images using PhantomJS (requires [Grunt](http://gruntjs.com/) `~0.4.1`)
+Grunt plugin to rasterize SVG to PNG images using PhantomJS
 
-## Example usage
+## Getting Started
+
+This plugin requires [Grunt](http://gruntjs.com/) `~0.4.1`
 
 ````javascript
 // Gruntfile.js configuration
@@ -26,8 +28,6 @@ grunt.initConfig({
 
 * * *
 
-## Authors
-
-* [David Bushell](http://dbushell.com) | [@dbushell](http://twitter.com/dbushell)
+Created by [David Bushell](http://dbushell.com) | [@dbushell](http://twitter.com/dbushell)
 
 Copyright © 2013 David Bushell | MIT license

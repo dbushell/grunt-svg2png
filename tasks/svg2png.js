@@ -8,6 +8,8 @@
 
 'use strict';
 
+var phantomjs = require('phantomjs');
+
 module.exports = function(grunt)
 {
     grunt.registerMultiTask('svg2png', 'Rasterize SVG to PNG images using PhantomJS', function()
@@ -49,7 +51,7 @@ module.exports = function(grunt)
 
             grunt.util.spawn(
             {
-                cmd: 'phantomjs',
+                cmd: phantomjs.path,
                 args: [
                         'tasks/lib/svg2png.js',
                         inputFile,

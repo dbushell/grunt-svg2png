@@ -53,7 +53,7 @@ exports.svg2png = {
     {
         fs.stat('test/png/grunt-logo.png', function(err, stats)
         {
-            test.ok(err === null && stats.size > 44000 && stats.size < 56000, 'PNG "grunt-logo.png" should be ~45kb in size');
+            test.ok(err === null && stats.size > 44000 && stats.size < 46000, 'PNG "grunt-logo.png" should be ~45kb in size');
             test.done();
         });
     },

@@ -26,6 +26,8 @@ grunt.initConfig({
 });
 ````
 
+This task works well between [SVGO Grunt](https://github.com/svg/svgo-grunt) and [Grunt ImageOptim](https://github.com/JamieMason/grunt-imageoptim)!
+
 * * *
 
 Created by [David Bushell](http://dbushell.com) | [@dbushell](http://twitter.com/dbushell)

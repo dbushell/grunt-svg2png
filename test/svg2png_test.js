@@ -16,7 +16,7 @@ exports.svg2png = {
 
     test1: function(test)
     {
-        var all = fs.readdirSync('test/svg'),
+        var all = fs.readdirSync('test/png'),
             png = [];
 
         if (all instanceof Array) {
@@ -33,7 +33,7 @@ exports.svg2png = {
 
     test2: function(test)
     {
-        fs.stat('test/svg/grunt-logo.png', function(err, stats)
+        fs.stat('test/png/grunt-logo.png', function(err, stats)
         {
             test.ok(err === null && stats.isFile(), 'PNG "grunt-logo.png" should exist');
             test.done();
@@ -42,7 +42,7 @@ exports.svg2png = {
 
     test3: function(test)
     {
-        fs.stat('test/svg/orange-square.png', function(err, stats)
+        fs.stat('test/png/orange-square.png', function(err, stats)
         {
             test.ok(err === null && stats.isFile(), 'PNG "orange-square.png" should exist');
             test.done();
@@ -51,7 +51,7 @@ exports.svg2png = {
 
     test4: function(test)
     {
-        fs.stat('test/svg/grunt-logo.png', function(err, stats)
+        fs.stat('test/png/grunt-logo.png', function(err, stats)
         {
             test.ok(err === null && stats.size > 44000 && stats.size < 56000, 'PNG "grunt-logo.png" should be ~45kb in size');
             test.done();
@@ -61,7 +61,7 @@ exports.svg2png = {
     test5: function(test)
     {
         var png = new pngjs.PNG({ filterType: 4 }),
-            stream = fs.createReadStream('test/svg/orange-square.png').pipe(png);
+            stream = fs.createReadStream('test/png/orange-square.png').pipe(png);
 
         stream.on('parsed', function()
         {

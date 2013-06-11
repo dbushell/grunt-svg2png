@@ -8,7 +8,8 @@
 
 'use strict';
 
-var phantomjs = require('phantomjs');
+var phantomjs = require('phantomjs'),
+    path = require('path');
 
 module.exports = function(grunt)
 {
@@ -16,12 +17,36 @@ module.exports = function(grunt)
     {
 
         var done = this.async(),
-            files = grunt.file.expand(this.data.files),
-            total = files.length,
             start = new Date(),
             processed = 0,
             completed = 0,
-            maxspawns = 10;
+            maxspawns = 10,
+            files = [],
+            total = 0;
+
+        this.data.files.forEach(function(fset)
+        {
+            var svg = grunt.file.expand(fset.src);
+
+            svg.forEach(function(svg)
+            {
+                var src = path.resolve(svg),
+                    dest;
+
+                if (fset.dest) {
+                    dest = path.resolve(fset.dest) + '/' + path.basename(svg);
+                } else {
+                    dest = src;
+                }
+
+                files.push({
+                    src: src,
+                    dest: dest.replace(/\.svg$/i, '.png')
+                });
+            });
+
+            total = files.length;
+        });
 
         grunt.log.subhead('Rasterizing SVG to PNG (' + files.length + ' files)...');
 
@@ -42,26 +67,23 @@ module.exports = function(grunt)
 
         var next = function()
         {
-            var inputFile = files[processed++],
-                outputFile = (inputFile || '').replace(/\.svg$/i, '.png');
-
-            if (!inputFile) {
+            if (!files[processed]) {
                 return;
             }
-
             grunt.util.spawn(
             {
                 cmd: phantomjs.path,
                 args: [
                         'tasks/lib/svg2png.js',
-                        inputFile,
-                        outputFile
+                        files[processed].src,
+                        files[processed].dest
                     ]
                 },
                 function(error, result, code) {
                     onComplete();
                 }
             );
+            processed++;
         };
 
         var styles = {

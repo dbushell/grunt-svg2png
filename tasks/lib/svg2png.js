@@ -6,4 +6,31 @@
  * Licensed under The MIT License (MIT)
  */
 
-'use strict';
+var fs = require('fs');
+
+var inputFile = phantom.args[0],
+    outputFile = phantom.args[1],
+
+    svgdata = fs.read(inputFile) || '',
+
+    frag = window.document.createElement('div'),
+
+    page = require('webpage').create();
+
+frag.innerHTML = svgdata;
+
+var svg = frag.querySelector('svg'),
+    width = svg.getAttribute('width'),
+    height = svg.getAttribute('height');
+
+page.viewportSize = {
+    width: parseFloat(width),
+    height: parseFloat(height)
+};
+
+page.open(inputFile, function(status)
+{
+    page.render(outputFile);
+    phantom.exit(false);
+    process.exit(0);
+});

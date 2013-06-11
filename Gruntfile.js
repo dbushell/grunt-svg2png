@@ -25,11 +25,17 @@ module.exports = function(grunt)
         },
 
         clean: {
-            tests: ['tmp']
+            tests: ['test/**/*.png']
         },
 
         nodeunit: {
             tests: ['test/*_test.js']
+        },
+
+        svg2png: {
+            all: {
+                files: 'test/**/*.svg'
+            }
         }
 
     });
@@ -40,7 +46,7 @@ module.exports = function(grunt)
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-contrib-nodeunit');
 
-    grunt.registerTask('test', ['clean', 'nodeunit']);
+    grunt.registerTask('test', ['clean', 'svg2png', 'nodeunit']);
     grunt.registerTask('default', ['jshint', 'test']);
 
 };

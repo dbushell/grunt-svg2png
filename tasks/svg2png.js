@@ -18,9 +18,7 @@ module.exports = function(grunt)
 
         var done = this.async(),
             start = new Date(),
-            processed = 0,
             completed = 0,
-            maxspawns = 10,
             files = [],
             total = 0;
 
@@ -49,42 +47,6 @@ module.exports = function(grunt)
         });
 
         grunt.log.subhead('Rasterizing SVG to PNG (' + files.length + ' files)...');
-
-        var onComplete = function()
-        {
-            if (++completed >= total) {
-                update();
-                grunt.log.write("\n");
-                grunt.log.ok("Rasterization complete.");
-                done();
-            } else {
-                update();
-                if (processed < total) {
-                    next();
-                }
-            }
-        };
-
-        var next = function()
-        {
-            if (!files[processed]) {
-                return;
-            }
-            grunt.util.spawn(
-            {
-                cmd: phantomjs.path,
-                args: [
-                        path.resolve(__dirname, 'lib/svg2png.js'),
-                        files[processed].src,
-                        files[processed].dest
-                    ]
-                },
-                function(error, result, code) {
-                    onComplete();
-                }
-            );
-            processed++;
-        };
 
         var styles = {
 
@@ -134,14 +96,32 @@ module.exports = function(grunt)
             process.stdout.write(str);
         };
 
-        if (!total) {
-            onComplete();
-        } else {
-            update();
-            while(maxspawns--) {
-                next();
+        var spawn = grunt.util.spawn({
+            cmd: phantomjs.path,
+            args: [
+                    path.resolve(__dirname, 'lib/svg2png.js'),
+                    JSON.stringify(files)
+                ]
+            },
+            function(err, result, code)
+            {
+                grunt.log.write("\n");
+                grunt.log.ok("Rasterization complete.");
+                done();
             }
-        }
+        );
 
+        spawn.stdout.on('data', function(buffer)
+        {
+            try {
+                var result = JSON.parse(buffer.toString());
+                if (result.status) {
+                    completed++;
+                    update();
+                }
+            } catch (e) { }
+        });
+
+        update();
     });
 };

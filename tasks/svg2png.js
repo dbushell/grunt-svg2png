@@ -74,7 +74,7 @@ module.exports = function(grunt)
             {
                 cmd: phantomjs.path,
                 args: [
-                        'tasks/lib/svg2png.js',
+                        path.resolve(__dirname, 'lib/svg2png.js'),
                         files[processed].src,
                         files[processed].dest
                     ]

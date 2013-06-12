@@ -28,7 +28,8 @@ page.viewportSize = {
     height: parseFloat(height)
 };
 
-page.open(inputFile, function(status)
+// page.open(inputFile, function(status)
+page.open('data:image/svg+xml;utf8,' + svgdata, function(status)
 {
     page.render(outputFile);
     phantom.exit(false);

@@ -6,32 +6,43 @@
  * Licensed under The MIT License (MIT)
  */
 
-var fs = require('fs');
+var fs = require('fs'),
+    page = require('webpage').create(),
+    files = JSON.parse(phantom.args[0]),
+    total = files.length,
+    next = 0,
 
-var inputFile = phantom.args[0],
-    outputFile = phantom.args[1],
+    file, svgdata, frag, svg, width, height;
 
-    svgdata = fs.read(inputFile) || '',
+var nextFile = function()
+{
+    if (next >= total) {
+        phantom.exit(0);
+        return;
+    }
 
-    frag = window.document.createElement('div'),
+    file = files[next++];
 
-    page = require('webpage').create();
+    svgdata = fs.read(file.src) || '';
 
-frag.innerHTML = svgdata;
+    frag = window.document.createElement('div');
+    frag.innerHTML = svgdata;
 
-var svg = frag.querySelector('svg'),
-    width = svg.getAttribute('width'),
+    svg = frag.querySelector('svg');
+    width = svg.getAttribute('width');
     height = svg.getAttribute('height');
 
-page.viewportSize = {
-    width: parseFloat(width),
-    height: parseFloat(height)
+    page.viewportSize = {
+        width: parseFloat(width),
+        height: parseFloat(height)
+    };
+
+    page.open('data:image/svg+xml;utf8,' + svgdata, function(status)
+    {
+        page.render(file.dest);
+        console.log(JSON.stringify({ 'file': file, 'status': status }));
+        nextFile();
+    });
 };
 
-// page.open(inputFile, function(status)
-page.open('data:image/svg+xml;utf8,' + svgdata, function(status)
-{
-    page.render(outputFile);
-    phantom.exit(false);
-    process.exit(0);
-});
+nextFile();

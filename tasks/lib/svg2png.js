@@ -37,7 +37,8 @@ var nextFile = function()
         height: parseFloat(height)
     };
 
-    page.open('data:image/svg+xml;utf8,' + svgdata, function(status)
+    // page.open('data:image/svg+xml;utf8,' + svgdata, function(status)
+    page.open(file.src, function(status)
     {
         page.render(file.dest);
         console.log(JSON.stringify({ 'file': file, 'status': status }));

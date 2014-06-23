@@ -28,7 +28,7 @@ This task works well between [SVGO Grunt](https://github.com/svg/svgo-grunt) and
 
 ## Updates
 
-**2014-06-23** pulled in [path fix](https://github.com/dbushell/grunt-svg2png/pull/9) and option for [use case without terminal](https://github.com/dbushell/grunt-svg2png/pull/13). You may need to update for files config to include `cwd` and `dest` options.
+**2014-06-23** pulled in [path fix](https://github.com/dbushell/grunt-svg2png/pull/9) and option for [use case without terminal](https://github.com/dbushell/grunt-svg2png/pull/13). You may need to update your `files` config to include `cwd` and `dest` options.
 
 * * *
 

@@ -17,9 +17,7 @@ grunt.initConfig({
             // specify files in array format with multiple src-dest mapping
             files: [
                 // rasterize all SVG files in "img" and its subdirectories to "img/png"
-                { cwd: 'img/', src: ['**/*.svg'], dest: 'img/png/' },
-                // rasterize SVG file to same directory
-                { src: ['img/logo.svg'] }
+                { cwd: 'img/', src: ['**/*.svg'], dest: 'img/png/' }
             ]
         }
     }
@@ -27,6 +25,10 @@ grunt.initConfig({
 ````
 
 This task works well between [SVGO Grunt](https://github.com/svg/svgo-grunt) and [Grunt ImageOptim](https://github.com/JamieMason/grunt-imageoptim)!
+
+## Updates
+
+**2014-06-23** pulled in [path fix](https://github.com/dbushell/grunt-svg2png/pull/9) and option for [use case without terminal](https://github.com/dbushell/grunt-svg2png/pull/13). You may need to update for files config to include `cwd` and `dest` options.
 
 * * *
 

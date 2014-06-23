@@ -22,17 +22,15 @@ module.exports = function(grunt)
             files = [],
             total = 0;
 
-        this.data.files.forEach(function(fset)
+        this.files.forEach(function(fset)
         {
-            var svg = grunt.file.expand(fset.src);
-
-            svg.forEach(function(svg)
+            fset.src.forEach(function(svg)
             {
-                var src = path.resolve(svg),
+                var src = path.resolve(fset.cwd + svg),
                     dest;
 
                 if (fset.dest) {
-                    dest = path.resolve(fset.dest) + '/' + path.basename(svg);
+                    dest = path.resolve(fset.dest) + '/' + svg;
                 } else {
                     dest = src;
                 }

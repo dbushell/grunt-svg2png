@@ -35,7 +35,7 @@ module.exports = function(grunt)
         svg2png: {
             all: {
                 files: [
-                    { src: ['test/**/*.svg'], dest: 'test/png/' }
+                    { cwd: 'test/svg/', src: ['**/*.svg'], dest: 'test/png/' }
                 ]
             }
         }
@@ -47,7 +47,7 @@ module.exports = function(grunt)
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-contrib-nodeunit');
-    
+
     grunt.registerTask('unset_clearline', 'Unset stdout.clearLine for testing', function(){
         process.stdout.clearLine = undefined;
     });

@@ -77,14 +77,14 @@ module.exports = function(grunt)
             if (!total) {
                 return;
             }
-            
+
             var hasTerminal = !!process.stdout.clearLine;
-            
-            if (hasTerminal) { 
+
+            if (hasTerminal) {
                 process.stdout.clearLine();
                 process.stdout.cursorTo(0);
             }
-            
+
             var str = style('0%', 'yellow') + ' [ ',
                 arr = [],
                 count = total,
@@ -95,7 +95,7 @@ module.exports = function(grunt)
             }
             str += arr.reverse().join('');
             str += ' ] ' + style(percent + "%", 'green') + ' (' + ((new Date() - start) / 1000).toFixed(1) + 's) ';
-            
+
             process.stdout.write(str + (hasTerminal ? '' : "\n"));
         };
 

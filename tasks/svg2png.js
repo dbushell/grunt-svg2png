@@ -26,7 +26,7 @@ module.exports = function(grunt)
         {
             fset.src.forEach(function(svg)
             {
-                var src = path.resolve(fset.cwd + svg),
+                var src = path.resolve(fset.cwd || "" + svg),
                     dest;
 
                 if (fset.dest) {

@@ -3,7 +3,7 @@
 
     "description": "Grunt plugin to rasterize SVG to PNG images using PhantomJS",
 
-    "version": "0.2.3",
+    "version": "0.2.4",
 
     "author": {
         "name": "David Bushell",

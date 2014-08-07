@@ -9,7 +9,9 @@
 'use strict';
 
 var phantomjs = require('phantomjs'),
-    path = require('path');
+    path = require('path'),
+    spawn = require('child_process').spawn,
+    EOL = require('os').EOL;
 
 module.exports = function(grunt)
 {
@@ -20,13 +22,15 @@ module.exports = function(grunt)
             start = new Date(),
             completed = 0,
             files = [],
-            total = 0;
+            total = 0,
+            part = 0,
+            partMaxFiles = 50;
 
         this.files.forEach(function(fset)
         {
             fset.src.forEach(function(svg)
             {
-                var src = path.resolve((fset.cwd || "") + svg),
+                var src = path.resolve((fset.cwd || '') + svg),
                     dest;
 
                 if (fset.dest) {
@@ -44,10 +48,10 @@ module.exports = function(grunt)
             total = files.length;
         });
 
+
         grunt.log.subhead('Rasterizing SVG to PNG (' + files.length + ' files)...');
 
         var styles = {
-
             'bold'          : ['\x1B[1m',  '\x1B[22m'],
             'italic'        : ['\x1B[3m',  '\x1B[23m'],
             'underline'     : ['\x1B[4m',  '\x1B[24m'],
@@ -86,43 +90,76 @@ module.exports = function(grunt)
             }
 
             var str = style('0%', 'yellow') + ' [ ',
-                arr = [],
-                count = total,
-                percent = ((100 / total) * completed).toFixed(2);
+                progress = completed / total,
+                percent = (progress * 100).toFixed(2),
+                barLen = 50,
+                barCompleted = Math.round(progress * barLen);
 
-            while(count--) {
-                arr.push(count < completed ? '=' : ' ');
-            }
-            str += arr.reverse().join('');
-            str += ' ] ' + style(percent + "%", 'green') + ' (' + ((new Date() - start) / 1000).toFixed(1) + 's) ';
+            str += grunt.util.repeat(barCompleted, '=');
+            str += grunt.util.repeat(barLen - barCompleted, ' ');
 
-            process.stdout.write(str + (hasTerminal ? '' : "\n"));
+            str += ' ] ' + style(percent + '%', 'green') + ' (' + ((new Date() - start) / 1000).toFixed(1) + 's) ';
+
+            process.stdout.write(str + (hasTerminal ? '' : '\n'));
         };
 
-        var spawn = grunt.util.spawn({
-            cmd: phantomjs.path,
-            args: [
-                    path.resolve(__dirname, 'lib/svg2png.js'),
-                    JSON.stringify(files)
-                ]
-            },
-            function(err, result, code)
-            {
-                grunt.log.write("\n");
-                grunt.log.ok("Rasterization complete.");
-                done();
-            }
-        );
 
-        spawn.stdout.on('data', function(buffer)
+        var ph = spawn(phantomjs.path, [ path.resolve(__dirname, 'lib/svg2png.js') ]);
+
+        ph.stdin.setEncoding('utf8');
+        ph.stdout.setEncoding('utf8');
+        ph.stderr.pipe(process.stderr);
+
+        var sendCommand = function (msg)
         {
-            try {
-                var result = JSON.parse(buffer.toString());
-                if (result.status) {
-                    completed++;
-                    update();
+            ph.stdin.write(JSON.stringify(msg) + '\n');
+        };
+
+        ph.stdout.on('data', function(buffer)
+        {
+            var result = {},
+                line = buffer.toString().trim(),
+                messages = line.split(EOL),
+                i = 0,
+                len = messages.length;
+
+            if (!line.length) { // empty line
+                return;
+            }
+
+            for ( ; i < len; i++) {
+                result = JSON.parse(messages[i]);
+
+                // console.log('< ' + messages[i]);
+
+                switch (result.status) {
+                    case 'start':
+                    case 'done':
+                        if (part * partMaxFiles < total) {
+                            sendCommand({
+                                'cmd': 'todo',
+                                'files': files.slice(part * partMaxFiles, ++part * partMaxFiles)
+                            });
+                        } else {
+                            sendCommand({ 'cmd': 'exit' });
+                        }
+
+                        break;
+
+                    case 'progress':
+                        completed++;
+                        update();
+
+                        break;
                 }
-            } catch (e) { }
+            }
+        });
+
+        ph.on('close', function()
+        {
+            grunt.log.write('\n\n');
+            grunt.log.ok('Rasterization complete.');
+            done();
         });
 
         update();

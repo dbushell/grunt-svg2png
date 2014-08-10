@@ -76,31 +76,52 @@ module.exports = function(grunt)
             return styles[format][0] + str + styles[format][1];
         };
 
+        var getTime = function ()
+        {
+            return ((new Date() - start) / 1000).toFixed(1) + 's';
+        };
+
         var update = function()
         {
             if (!total) {
                 return;
             }
 
-            var hasTerminal = !!process.stdout.clearLine;
-
-            if (hasTerminal) {
-                process.stdout.clearLine();
-                process.stdout.cursorTo(0);
-            }
-
-            var str = style('0%', 'yellow') + ' [ ',
-                progress = completed / total,
+            var progress = completed / total,
                 percent = (progress * 100).toFixed(2),
                 barLen = 50,
-                barCompleted = Math.round(progress * barLen);
+                barCompleted = Math.round(progress * barLen),
+                prevBarCompleted,
+                str = style('0%', 'yellow'),
+                stdout = process.stdout,
+                hasTerminal = !!stdout.clearLine;
 
-            str += grunt.util.repeat(barCompleted, '=');
-            str += grunt.util.repeat(barLen - barCompleted, ' ');
+            if (hasTerminal) {
+                stdout.clearLine();
+                stdout.cursorTo(0);
 
-            str += ' ] ' + style(percent + '%', 'green') + ' (' + ((new Date() - start) / 1000).toFixed(1) + 's) ';
+                str += ' [ ';
+                str += grunt.util.repeat(barCompleted, '=');
+                str += grunt.util.repeat(barLen - barCompleted, ' ');
+                str += ' ] ' + style(percent + '%', 'green') + ' (' + getTime() + ')';
 
-            process.stdout.write(str + (hasTerminal ? '' : '\n'));
+                stdout.write(str);
+
+            } else {
+                prevBarCompleted = Math.round((completed - 1) * barLen / total);
+
+                if (completed === 0) {
+                    stdout.write(str + '  ');
+                }
+
+                if (barCompleted > prevBarCompleted) {
+                    stdout.write('.');
+                }
+
+                if (completed === total) {
+                    stdout.write('  ' + style('100%', 'green') + ' (' + getTime() + ')');
+                }
+            }
         };
 
 

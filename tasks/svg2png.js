@@ -114,8 +114,8 @@ module.exports = function(grunt)
                     stdout.write(str + '  ');
                 }
 
-                if (barCompleted > prevBarCompleted) {
-                    stdout.write('.');
+                if (completed > 0 && barCompleted > prevBarCompleted) {
+                    stdout.write(grunt.util.repeat(barCompleted - prevBarCompleted, '.'));
                 }
 
                 if (completed === total) {

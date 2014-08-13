@@ -6,44 +6,70 @@
  * Licensed under The MIT License (MIT)
  */
 
-var fs = require('fs'),
+var sys = require('system'),
+    fs = require('fs'),
     page = require('webpage').create(),
-    files = JSON.parse(phantom.args[0]),
-    total = files.length,
-    next = 0,
 
-    file, svgdata, frag, svg, width, height;
+    files, next;
 
-var nextFile = function()
+
+var convertFiles = function()
 {
-    if (next >= total) {
-        phantom.exit(0);
+    if (next >= files.length) {
+        sendMessage({ 'status': 'done' });
+        getCommand();
         return;
     }
 
-    file = files[next++];
+    // convert file
+    var file = files[next++],
+        frag = window.document.createElement('div');
 
-    svgdata = fs.read(file.src) || '';
+    frag.innerHTML = fs.read(file.src) || '';
 
-    frag = window.document.createElement('div');
-    frag.innerHTML = svgdata;
-
-    svg = frag.querySelector('svg');
-    width = svg.getAttribute('width');
-    height = svg.getAttribute('height');
+    var svg = frag.querySelector('svg'),
+        width = svg.getAttribute('width'),
+        height = svg.getAttribute('height');
 
     page.viewportSize = {
         width: parseFloat(width),
         height: parseFloat(height)
     };
 
-    // page.open('data:image/svg+xml;utf8,' + svgdata, function(status)
-    page.open(file.src, function(status)
+    // page.open('data:image/svg+xml;utf8,' + svgData, function(stat)
+    page.open(file.src, function(stat)
     {
         page.render(file.dest);
-        console.log(JSON.stringify({ 'file': file, 'status': status }));
-        nextFile();
+        sendMessage({ 'status': 'progress', 'file': file, 'stat': stat });
+        convertFiles();
     });
 };
 
-nextFile();
+var sendMessage = function(msg)
+{
+    sys.stdout.writeLine(JSON.stringify(msg));
+};
+
+var getCommand = function()
+{
+    var line = sys.stdin.readLine(),
+        result = JSON.parse(line.toString());
+
+    // sys.stderr.writeLine('> ' + line);  // log
+
+    switch (result.cmd)
+    {
+        case 'todo':
+            files = result.files;
+            next = 0;
+            convertFiles();
+            break;
+
+        case 'exit':
+            phantom.exit(0);
+            return;
+    }
+};
+
+sendMessage({ 'status': 'start' });
+getCommand();

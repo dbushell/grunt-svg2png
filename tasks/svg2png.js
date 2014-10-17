@@ -35,9 +35,17 @@ module.exports = function(grunt)
                     dest = src;
                 }
 
+                fset.width = parseInt(fset.width, 10);
+                if (fset.width && fset.width > 0) {
+                    dest = dest.replace(/\.svg$/i, '-w' + fset.width + '.png');
+                } else {
+                    dest = dest.replace(/\.svg$/i, '.png');
+                }
+
                 files.push({
                     src: src,
-                    dest: dest.replace(/\.svg$/i, '.png')
+                    dest: dest,
+                    width: parseFloat(fset.width)
                 });
             });
 

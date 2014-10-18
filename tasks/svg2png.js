@@ -102,7 +102,7 @@ module.exports = function(grunt)
                 arr.push(count < completed ? '=' : ' ');
             }
             str += arr.reverse().join('');
-            str += ' ] ' + style(percent + "%", 'green') + ' (' + ((new Date() - start) / 1000).toFixed(1) + 's) ';
+            str += ' ] ' + style(percent + "%, " + completed + " of " + total, 'green') + ' (' + ((new Date() - start) / 1000).toFixed(1) + 's) ';
 
             process.stdout.write(str + (hasTerminal ? '' : "\n"));
         };

@@ -32,8 +32,10 @@ var nextFile = function()
 
     svg = frag.querySelector('svg');
 
-    svgWidth = parseFloat(svg.getAttribute('width').replace('px', ''));
-    svgHeight = parseFloat(svg.getAttribute('height').replace('px', ''));
+    svgWidth = svg.getAttribute('width') || '1';
+    svgWidth = parseFloat(svgWidth.replace('px', ''));
+    svgHeight = svg.getAttribute('height') || '1';
+    svgHeight = parseFloat(svgHeight.replace('px', ''));
 
     if (file.width && file.width > 0) {
         width = parseFloat(file.width);
@@ -45,15 +47,17 @@ var nextFile = function()
 
     img = window.document.createElement('img');
     img.src = 'data:image/svg+xml;utf8,' + svgdata;
-    img.setAttribute('width', width);
-    img.setAttribute('height', height);
-    img.style.cssText = 'display: block; width:' + width + '; height:' + height;
+    if (width) img.setAttribute('width', width);
+    if (height) img.setAttribute('height', height);
 
     page.viewportSize = {
         width: width,
         height: height
     };
 
+    if (width < 1) width = 'auto';
+    if (height < 1) width = 'height';
+    img.style.cssText = 'display: block; width:' + width + '; height:' + height;
 
     // page.open('data:image/svg+xml;utf8,' + svgdata, function(status)
     page.open('data:text/html,<!doctype html><title>svg!</title><body style="padding:0;margin:0">' + img.outerHTML + '</body></html>', function(status)

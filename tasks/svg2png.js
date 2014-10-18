@@ -130,7 +130,20 @@ module.exports = function(grunt)
                     completed++;
                     update();
                 }
-            } catch (e) { }
+            } catch (e) {
+                var msg = "\n";
+                if (e.message) msg += "\n  message: " + e.message;
+                if (e.name) msg += "\n  name: " + e.name;
+                if (e.description) msg += "\n  description: " + e.description;
+                if (e.number) msg += "\n  number: " + e.number;
+                if (e.fileName) msg += "\n  fileName: " + e.fileName;
+                if (e.lineNumber) msg += "\n  lineNumber: " + e.lineNumber;
+                if (e.columnNumber) msg += "\n  columnNumber: " + e.columnNumber;
+                if (e.stack) msg += "\n  stack: " + e.stack;
+                msg += "\n\nCouldn’t convert SVG(s)\n";
+                grunt.log.write("\n");
+                grunt.fail.fatal(msg, e);
+            }
         });
 
         update();

@@ -140,6 +140,7 @@ module.exports = function(grunt)
                 if (e.lineNumber) msg += "\n  lineNumber: " + e.lineNumber;
                 if (e.columnNumber) msg += "\n  columnNumber: " + e.columnNumber;
                 if (e.stack) msg += "\n  stack: " + e.stack;
+                if (buffer.toString()) msg += "\n buffer.toString(): " + buffer.toString();
                 msg += "\n\nCouldn’t convert SVG(s)\n";
                 grunt.log.write("\n");
                 grunt.fail.fatal(msg, e);

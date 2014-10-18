@@ -77,6 +77,23 @@ exports.svg2png = {
             test.ok(false, 'File should be readable');
             test.done();
         });
-    }
+    },
 
+    test6: function(test)
+    {
+        var png = new pngjs.PNG({ filterType: 4 }),
+            stream = fs.createReadStream('test/png/orange-square-w500.png').pipe(png);
+
+        stream.on('parsed', function()
+        {
+            test.ok(this.width === 500 && this.height === 500, 'PNG "orange-square.png" should be 500x500px in resolution');
+            test.done();
+        });
+
+        stream.on('error', function(err)
+        {
+            test.ok(false, 'File should be readable');
+            test.done();
+        });
+    },
 };

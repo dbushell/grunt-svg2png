@@ -35,9 +35,17 @@ module.exports = function(grunt)
                     dest = src;
                 }
 
+                fset.width = parseInt(fset.width, 10);
+                if (fset.width && fset.width > 0) {
+                    dest = dest.replace(/\.svg$/i, '-w' + fset.width + '.png');
+                } else {
+                    dest = dest.replace(/\.svg$/i, '.png');
+                }
+
                 files.push({
                     src: src,
-                    dest: dest.replace(/\.svg$/i, '.png')
+                    dest: dest,
+                    width: parseFloat(fset.width)
                 });
             });
 
@@ -94,7 +102,7 @@ module.exports = function(grunt)
                 arr.push(count < completed ? '=' : ' ');
             }
             str += arr.reverse().join('');
-            str += ' ] ' + style(percent + "%", 'green') + ' (' + ((new Date() - start) / 1000).toFixed(1) + 's) ';
+            str += ' ] ' + style(percent + "%, " + completed + " of " + total, 'green') + ' (' + ((new Date() - start) / 1000).toFixed(1) + 's) ';
 
             process.stdout.write(str + (hasTerminal ? '' : "\n"));
         };
@@ -122,7 +130,21 @@ module.exports = function(grunt)
                     completed++;
                     update();
                 }
-            } catch (e) { }
+            } catch (e) {
+                var msg = "\n";
+                if (e.message) msg += "\n  message: " + e.message;
+                if (e.name) msg += "\n  name: " + e.name;
+                if (e.description) msg += "\n  description: " + e.description;
+                if (e.number) msg += "\n  number: " + e.number;
+                if (e.fileName) msg += "\n  fileName: " + e.fileName;
+                if (e.lineNumber) msg += "\n  lineNumber: " + e.lineNumber;
+                if (e.columnNumber) msg += "\n  columnNumber: " + e.columnNumber;
+                if (e.stack) msg += "\n  stack: " + e.stack;
+                if (buffer.toString()) msg += "\n buffer.toString(): " + buffer.toString();
+                msg += "\n\nCouldn’t convert SVG(s)\n";
+                grunt.log.write("\n");
+                grunt.fail.fatal(msg, e);
+            }
         });
 
         update();

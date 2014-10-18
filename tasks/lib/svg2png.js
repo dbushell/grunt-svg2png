@@ -7,7 +7,7 @@
  */
 
 var fs = require('fs'),
-    page = require('webpage').create(),
+    page,
     files = JSON.parse(phantom.args[0]),
     total = files.length,
     next = 0,
@@ -16,6 +16,8 @@ var fs = require('fs'),
 
 var nextFile = function()
 {
+    page = require('webpage').create();
+
     if (next >= total) {
         phantom.exit(0);
         return;

@@ -77,6 +77,24 @@ exports.svg2png = {
             test.ok(false, 'File should be readable');
             test.done();
         });
+    },
+
+    renameTest1: function(test)
+    {
+        fs.stat('test/png/icon__orange-square.png', function(err, stats)
+        {
+            test.ok(err === null && stats.isFile(), 'PNG "icon__orange-square.png" should exist');
+            test.done();
+        });
+    },
+
+    renameTest2: function(test)
+    {
+        fs.stat('test/png/icon__grunt-logo.png', function(err, stats)
+        {
+            test.ok(err === null && stats.isFile(), 'PNG "icon__grunt-logo.png" should exist');
+            test.done();
+        });
     }
 
 };

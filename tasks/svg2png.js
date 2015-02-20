@@ -99,20 +99,12 @@ module.exports = function(grunt)
             process.stdout.write(str + (hasTerminal ? '' : "\n"));
         };
 
-        var spawn = grunt.util.spawn({
-            cmd: phantomjs.path,
-            args: [
-                    path.resolve(__dirname, 'lib/svg2png.js'),
-                    JSON.stringify(files)
-                ]
-            },
-            function(err, result, code)
-            {
-                grunt.log.write("\n");
-                grunt.log.ok("Rasterization complete.");
-                done();
-            }
+        var spawn = require('child_process').spawn(
+            phantomjs.path,
+            [ path.resolve(__dirname, 'lib/svg2png.js') ]
         );
+        spawn.stdin.write(JSON.stringify(files));
+        spawn.stdin.end();
 
         spawn.stdout.on('data', function(buffer)
         {
@@ -123,6 +115,14 @@ module.exports = function(grunt)
                     update();
                 }
             } catch (e) { }
+        });
+
+        spawn.on('exit', function()
+        {
+            update();
+            grunt.log.write("\n");
+            grunt.log.ok("Rasterization complete.");
+            done();
         });
 
         update();

@@ -7,8 +7,9 @@
  */
 
 var fs = require('fs'),
+    system = require('system'),
     page = require('webpage').create(),
-    files = JSON.parse(phantom.args[0]),
+    files = JSON.parse(system.stdin.read()),
     total = files.length,
     next = 0,
 

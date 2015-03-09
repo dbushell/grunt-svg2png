@@ -44,6 +44,12 @@ module.exports = function(grunt)
             total = files.length;
         });
 
+        if (!total) {
+            grunt.log.subhead('No files to rasterize');
+            done();
+            return;
+        }
+
         grunt.log.subhead('Rasterizing SVG to PNG (' + files.length + ' files)...');
 
         var styles = {
@@ -74,10 +80,6 @@ module.exports = function(grunt)
 
         var update = function()
         {
-            if (!total) {
-                return;
-            }
-
             var hasTerminal = !!process.stdout.clearLine;
 
             if (hasTerminal) {

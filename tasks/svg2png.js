@@ -80,12 +80,6 @@ module.exports = function(grunt)
 
         var update = function()
         {
-            var hasTerminal = !!process.stdout.clearLine;
-
-            if (hasTerminal) {
-                process.stdout.clearLine();
-                process.stdout.cursorTo(0);
-            }
 
             var str = style('0%', 'yellow') + ' [ ',
                 arr = [],
@@ -97,6 +91,14 @@ module.exports = function(grunt)
             }
             str += arr.reverse().join('');
             str += ' ] ' + style(percent + "%", 'green') + ' (' + ((new Date() - start) / 1000).toFixed(1) + 's) ';
+
+            var hasTerminal = !!process.stdout.clearScreenDown;
+
+            if (hasTerminal) {
+                process.stdout.cursorTo(0);
+                process.stdout.moveCursor(0, -Math.floor(str.length / process.stdout.columns));
+                process.stdout.clearScreenDown();
+            }
 
             process.stdout.write(str + (hasTerminal ? '' : "\n"));
         };

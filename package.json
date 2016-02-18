@@ -68,10 +68,5 @@
         }
     ],
 
-    "licenses": [
-        {
-            "type": "MIT",
-            "url": "https://raw.github.com/dbushell/grunt-svg2png/master/LICENSE.txt"
-        }
-    ]
+    "license": "MIT"
 }

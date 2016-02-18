@@ -8,7 +8,7 @@
 
 'use strict';
 
-var phantomjs = require('phantomjs-prebuild'),
+var phantomjs = require('phantomjs-prebuilt'),
     path = require('path');
 
 module.exports = function(grunt)

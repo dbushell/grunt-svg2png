@@ -29,7 +29,7 @@
     },
 
     "dependencies": {
-        "phantomjs-prebuilt": "git://github.com/wikimedia/phantomjs/commit/46e52fdea1780bdb0c184fe04cbff7d5aa366c03"
+        "phantomjs-prebuilt": "git://github.com/wikimedia/phantomjs.git#46e52fdea1780bdb0c184fe04cbff7d5aa366c03"
     },
 
     "devDependencies": {

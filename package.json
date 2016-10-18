@@ -33,7 +33,7 @@
     },
 
     "dependencies": {
-        "phantomjs": "~1.9.0"
+        "phantomjs": "~2.1.7"
     },
 
     "devDependencies": {

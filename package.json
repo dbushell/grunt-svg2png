@@ -37,7 +37,7 @@
         "grunt-contrib-jshint": "1.0.0",
         "grunt-contrib-nodeunit": "0.4.1",
         "grunt-contrib-clean": "1.0.0",
-        "pngjs": "2.2.0"
+        "pngjs": "3.0.1"
     },
 
     "keywords": [

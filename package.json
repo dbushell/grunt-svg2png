@@ -29,7 +29,7 @@
     },
 
     "dependencies": {
-        "phantomjs-prebuilt": "2.1.7"
+        "phantomjs-prebuilt": "2.1.14"
     },
 
     "devDependencies": {

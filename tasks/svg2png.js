@@ -8,7 +8,7 @@
 
 'use strict';
 
-var phantomjs = require('phantomjs'),
+var phantomjs = require('phantomjs-prebuilt'),
     path = require('path');
 
 module.exports = function(grunt)
@@ -88,14 +88,11 @@ module.exports = function(grunt)
             }
 
             var str = style('0%', 'yellow') + ' [ ',
-                arr = [],
-                count = total,
+                maxWidth = (process.stdout.columns - 25) || 30,
                 percent = ((100 / total) * completed).toFixed(2);
 
-            while(count--) {
-                arr.push(count < completed ? '=' : ' ');
-            }
-            str += arr.reverse().join('');
+            str += Array( Math.floor( maxWidth * percent / 100 ) + 1 ).join( '=' );
+            str += Array( maxWidth - Math.floor( maxWidth * percent / 100 ) + 1 ).join( ' ' );
             str += ' ] ' + style(percent + "%", 'green') + ' (' + ((new Date() - start) / 1000).toFixed(1) + 's) ';
 
             process.stdout.write(str + (hasTerminal ? '' : "\n"));

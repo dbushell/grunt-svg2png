@@ -24,28 +24,20 @@
 
     "main": "Gruntfile.js",
 
-    "engines": {
-        "node": ">=0.8.0"
-    },
-
     "scripts": {
         "test": "grunt test"
     },
 
     "dependencies": {
-        "phantomjs": "~1.9.0"
+        "phantomjs-prebuilt": "2.1.14"
     },
 
     "devDependencies": {
-        "grunt": "~0.4.0",
-        "grunt-contrib-jshint": "~0.2.0",
-        "grunt-contrib-nodeunit": "~0.1.2",
-        "grunt-contrib-clean": "~0.4.0",
-        "pngjs": "~0.4.0"
-    },
-
-    "peerDependencies": {
-        "grunt": "~0.4.0"
+        "grunt": "0.4.5",
+        "grunt-contrib-jshint": "1.0.0",
+        "grunt-contrib-nodeunit": "0.4.1",
+        "grunt-contrib-clean": "1.0.0",
+        "pngjs": "2.2.0"
     },
 
     "keywords": [
@@ -68,10 +60,5 @@
         }
     ],
 
-    "licenses": [
-        {
-            "type": "MIT",
-            "url": "https://raw.github.com/dbushell/grunt-svg2png/master/LICENSE.txt"
-        }
-    ]
+    "license": "MIT"
 }

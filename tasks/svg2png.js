@@ -116,7 +116,17 @@ module.exports = function(grunt)
                     completed++;
                     update();
                 }
-            } catch (e) { }
+            } catch (e) {
+                grunt.log.write("\n");
+                grunt.log.error(e);
+                done(new Error("Rasterization failed!"));
+            }
+        });
+
+        spawn.stderr.on('data', function (buffer) {
+            grunt.log.write("\n");
+            grunt.log.error(buffer);
+            done(new Error("Rasterization failed!"));
         });
 
         spawn.on('exit', function()

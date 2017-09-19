@@ -37,6 +37,17 @@ module.exports = function(grunt)
                 files: [
                     { cwd: 'test/svg/', src: ['**/*.svg'], dest: 'test/png/' }
                 ]
+            },
+            rename: {
+                files: [{
+                    expand: true,
+                    cwd: 'test/svg/',
+                    src: ['**/*.svg'],
+                    dest: 'test/png/',
+                    rename: function(dest, src) {
+                        return dest + 'icon__' + src.replace(/\.svg$/i, ".png");
+                    }
+                }]
             }
         }
 

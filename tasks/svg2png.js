@@ -35,9 +35,15 @@ module.exports = function(grunt)
                     dest = src;
                 }
 
+                if (fset.orig.rename) {
+                    dest = dest.replace(new RegExp("/" + fset.orig.cwd + '.*'), '');
+                } else {
+                    dest = dest.replace(/\.svg$/i, '.png');
+                }
+
                 files.push({
                     src: src,
-                    dest: dest.replace(/\.svg$/i, '.png')
+                    dest: dest
                 });
             });
 

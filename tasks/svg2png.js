@@ -78,27 +78,44 @@ module.exports = function(grunt)
             return styles[format][0] + str + styles[format][1];
         };
 
+        var hasTerminal = !!process.stdout.clearScreenDown;
+
+        if (!hasTerminal) {
+            var dotCount = total - 6;
+            if (dotCount > 0) {
+                process.stdout.write('0%' + Array(dotCount + 1).join('.') + '100%\n');
+            }
+        }
+
         var update = function()
         {
-            var hasTerminal = !!process.stdout.clearLine;
-
-            if (hasTerminal) {
-                process.stdout.clearLine();
-                process.stdout.cursorTo(0);
-            }
-
             var str = style('0%', 'yellow') + ' [ ',
                 arr = [],
                 count = total,
-                percent = ((100 / total) * completed).toFixed(2);
+                percent = ((100 / total) * completed).toFixed(2),
+                time = ((new Date() - start) / 1000).toFixed(1);
 
             while(count--) {
                 arr.push(count < completed ? '=' : ' ');
             }
             str += arr.reverse().join('');
-            str += ' ] ' + style(percent + "%", 'green') + ' (' + ((new Date() - start) / 1000).toFixed(1) + 's) ';
+            str += ' ] ' + style(percent + "%", 'green') + ' (' + time + 's) ';
 
-            process.stdout.write(str + (hasTerminal ? '' : "\n"));
+
+            if (hasTerminal) {
+                process.stdout.cursorTo(0);
+                process.stdout.moveCursor(0, -Math.floor(str.length / process.stdout.columns));
+                process.stdout.clearScreenDown();
+                process.stdout.write(str);
+            } else {
+                if (completed) {
+                    process.stdout.write('>');
+                    if (completed == total) {
+                        process.stdout.write('\n(' + time + 's)');
+                    }
+                }
+            }
+
         };
 
         var spawn = require('child_process').spawn(
@@ -121,7 +138,9 @@ module.exports = function(grunt)
 
         spawn.on('exit', function()
         {
-            update();
+            if (hasTerminal) {
+                update();
+            }
             grunt.log.write("\n");
             grunt.log.ok("Rasterization complete.");
             done();

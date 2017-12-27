@@ -38,8 +38,11 @@ var nextFile = function()
         height: parseFloat(height)
     };
 
+    // Prefix 'file://' to convert the local file path to a valid URL.
+    // Windows needs an extra slash before the drive letter ('C:\' etc.)
+    var url = 'file://' + (file.src[0] === '/' ? '' : '/') + file.src;
     // page.open('data:image/svg+xml;utf8,' + svgdata, function(status)
-    page.open(file.src, function(status)
+    page.open(url, function(status)
     {
         page.render(file.dest);
         console.log(JSON.stringify({ 'file': file, 'status': status }));

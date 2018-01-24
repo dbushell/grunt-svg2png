@@ -98,7 +98,7 @@ module.exports = function(grunt)
             str += arr.reverse().join('');
             str += ' ] ' + style(percent + "%", 'green') + ' (' + ((new Date() - start) / 1000).toFixed(1) + 's) ';
 
-            process.stdout.write(str + (hasTerminal ? '' : "\n"));
+            process.stdout.write(str + (hasTerminal ? '' : "\r"));
         };
 
         var spawn = require('child_process').spawn(
